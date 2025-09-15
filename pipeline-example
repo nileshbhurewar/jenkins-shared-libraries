@@ -1,0 +1,61 @@
+@Library('my-shared-library') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repo') {
+            steps {
+                cloneRepo("https://github.com/nileshbhurewar/EasyCRUD-docker", "main")
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
+                buildFrontendImage()
+            }
+        }
+
+        stage('Build Backend Image') {
+            steps {
+                buildBackendImage()
+            }
+        }
+
+        stage('Docker Hub Login') {
+            steps {
+                dockerHubLogin()
+            }
+        }
+
+        stage('Push Frontend Image') {
+            steps {
+                pushFrontendImage()
+            }
+        }
+
+        stage('Push Backend Image') {
+            steps {
+                pushBackendImage()
+            }
+        }
+
+        stage('Run Frontend Container') {
+            steps {
+                runFrontendContainer()
+            }
+        }
+
+        stage('Run Backend Container') {
+            steps {
+                runBackendContainer()
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished.'
+        }
+    }
+}
